@@ -1,0 +1,26 @@
+.role-title-modal {
+  width: 820px;
+  max-width: 95%;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.16);
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 12px;
+  resize: none;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+}
