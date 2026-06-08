@@ -11,12 +11,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        <Route path="/login" element={<LoginPage />} />
-
-        <Route path="/signup" element={<Signup />} />
-
+       
         <Route
           path="/home"
           element={
@@ -67,3 +62,14 @@ function App() {
 }
 
 export default App;
+
+
+
+/**
+  <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route path="/signup" element={<Signup />} />
+
+ */

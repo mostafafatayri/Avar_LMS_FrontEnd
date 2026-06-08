@@ -1,4 +1,4 @@
-@import "../Employees/EmployeesList.scss";
+//@import "../Employees/EmployeesList.scss";
 
 .roles-titles-content {
   margin-left: 260px;
@@ -17,7 +17,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
 }
-
+ 
 .roles-titles-table-wrapper {
   margin: 24px;
   background: white;
