@@ -1,0 +1,103 @@
+@import "../Employees/EmployeesList.scss";
+
+.departments-content {
+  margin-left: 260px;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: 0.3s;
+
+  &.sidebar-collapsed {
+    margin-left: 82px;
+  }
+}
+
+.department-stats {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.departments-filter-bar {
+  margin: 24px;
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+  gap: 12px;
+}
+
+.departments-table-wrapper {
+  margin: 24px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.departments-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: 16px;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 24%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 10%;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 22%;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 12%;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 12%;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    width: 10%;
+  }
+
+  th:nth-child(7),
+  td:nth-child(7) {
+    width: 10%;
+    text-align: right;
+  }
+
+  th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  td {
+    border-top: 1px solid #f1f5f9;
+    color: #0f172a;
+  }
+}
+
+.table-actions {
+  justify-content: flex-end;
+}

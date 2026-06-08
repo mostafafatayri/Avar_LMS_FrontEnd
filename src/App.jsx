@@ -5,6 +5,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Home from "./Pages/Home/Home";
 import EmployeesList from "./Pages/Employees/EmployeesList";
 import DepartmentsList from "./Pages/Departments/DepartmentsList";
+import SubTeamsList from "./Pages/SubTeams/SubTeamsList";
 function App() {
   return (
     <BrowserRouter>
@@ -27,9 +28,18 @@ function App() {
         <Route
   path="/departments"
   element={
-    <ProtectedRoute>
+ 
       <DepartmentsList />
-    </ProtectedRoute>
+   
+  }
+/>
+
+<Route
+  path="/sub-teams"
+  element={
+
+      <SubTeamsList />
+
   }
 />
 
