@@ -1,0 +1,19 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 850;
+    color: #111827;
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 15px;
+  }
+}

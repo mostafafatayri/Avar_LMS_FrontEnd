@@ -1,0 +1,45 @@
+.action-btn {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &--primary {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+
+  &--secondary {
+    background: #ffffff;
+    color: #2563eb;
+    border-color: #d8e2f0;
+
+    &:hover {
+      background: #f8fbff;
+      border-color: #2563eb;
+    }
+  }
+}
+.action-btn {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+}

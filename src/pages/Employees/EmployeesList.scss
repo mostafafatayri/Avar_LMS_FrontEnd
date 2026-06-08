@@ -1,0 +1,177 @@
+.employees-content {
+  margin-left: 260px;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: 0.3s;
+
+  &.sidebar-collapsed {
+    margin-left: 82px;
+  }
+}
+
+.page-header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  p {
+    color: #64748b;
+  }
+}
+
+.page-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.employee-stats {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+  h4 {
+    color: #64748b;
+    font-size: 14px;
+  }
+
+  h2 {
+    margin-top: 6px;
+    font-size: 30px;
+  }
+}
+
+.icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.yellow {
+  background: #fef3c7;
+  color: #ca8a04;
+}
+
+.purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.employees-filter-bar {
+  margin: 24px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+
+  display: flex;
+  gap: 12px;
+}
+
+.search-box {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 12px;
+
+  input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 44px;
+  }
+}
+
+.employees-filter-bar select {
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 0 14px;
+}
+
+.employees-table-wrapper {
+  margin: 24px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.employees-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: #f8fafc;
+    text-align: left;
+    padding: 16px;
+  }
+
+  td {
+    padding: 16px;
+    border-top: 1px solid #f1f5f9;
+  }
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.action-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.modal-overlay {
+  z-index: 99999;
+}
+.page-header,
+.page-actions {
+  position: relative;
+  z-index: 30;
+  pointer-events: auto;
+}

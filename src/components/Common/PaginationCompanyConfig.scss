@@ -1,0 +1,56 @@
+.secondary-action {
+  height: 46px;
+  padding: 0 18px;
+  border: 1px solid #d9dce7;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  &:hover {
+    background: #f8f5ff;
+    color: #7c3aed;
+  }
+}
+
+.departments-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  select,
+  button {
+    height: 36px;
+    border: 1px solid #ddd6fe;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #6d28d9;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  span {
+    font-weight: 800;
+    color: #334155;
+  }
+}

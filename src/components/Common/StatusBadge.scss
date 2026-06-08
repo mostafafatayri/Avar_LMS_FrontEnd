@@ -1,0 +1,31 @@
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+
+  &.high,
+  &.overdue {
+    background: #ffe8e8;
+    color: #dc2626;
+  }
+
+  &.medium,
+  &.in-progress {
+    background: #fff4db;
+    color: #d97706;
+  }
+
+  &.low,
+  &.completed {
+    background: #e7f9ee;
+    color: #16a34a;
+  }
+
+  &.open {
+    background: #eaf3ff;
+    color: #2563eb;
+  }
+}
