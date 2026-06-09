@@ -1,0 +1,85 @@
+
+
+.training-content {
+  margin-left: 260px;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: 0.3s;
+
+  &.sidebar-collapsed {
+    margin-left: 82px;
+  }
+}
+
+.training-empty-card {
+  margin: 24px;
+  min-height: 300px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    margin: 16px 0 6px;
+    color: #0f172a;
+    font-size: 18px;
+  }
+
+  p {
+    color: #64748b;
+    font-size: 15px;
+  }
+}
+
+.training-empty-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  color: #64748b;
+  display: grid;
+  place-items: center;
+}
+
+.training-table-wrapper {
+  margin: 24px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.training-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: 16px;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  td {
+    border-top: 1px solid #f1f5f9;
+  }
+}
+
+@media (max-width: 900px) {
+  .training-content,
+  .training-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+}

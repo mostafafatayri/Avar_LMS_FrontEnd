@@ -7,6 +7,11 @@ import EmployeesList from "./pages/Employees/EmployeesList";
 import DepartmentsList from "./pages/Departments/DepartmentsList";
 import SubTeamsList from "./pages/SubTeams/SubTeamsList";
 import RolesTitlesList from "./pages/RolesTitles/RolesTitlesList";
+import TrainingCatalogueList from "./pages/TrainingCatalogue/TrainingCatalogueList";
+import LearningPathsList from "./pages/LearningPaths/LearningPathsList";
+import AssignmentsList from "./pages/Assignments/AssignmentsList";
+import LiveSessionsList from "./pages/LiveSessions/LiveSessionsList";
+import MyTrainingsList from "./pages/MyTrainings/MyTrainingsList";
 function App() {
   return (
     <BrowserRouter>
@@ -56,6 +61,54 @@ function App() {
          
           }
         />
+
+        <Route
+  path="/training-catalogue"
+  element={
+
+      <TrainingCatalogueList />
+
+  }
+/>
+
+<Route
+  path="/learning-paths"
+  element={
+    
+      <LearningPathsList />
+
+      
+    
+  }
+/>
+
+<Route
+  path="/my-trainings"
+  element={
+   
+      <MyTrainingsList />
+  
+  }
+/>
+
+<Route
+  path="/assignments"
+  element={
+   
+      <AssignmentsList />
+  
+  }
+/>
+
+<Route
+  path="/live-sessions"
+  element={
+
+      <LiveSessionsList />
+     
+  }
+/>
+
       </Routes>
     </BrowserRouter>
   );
