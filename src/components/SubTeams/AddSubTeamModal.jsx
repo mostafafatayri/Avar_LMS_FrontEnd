@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 import { useDepartments } from "../../hooks/useDepartments";
 import { useEmployees } from "../../hooks/useEmployees";
-import { useCreateSubTeam } from "../../hooks/useSubTeams";
+import { useCreateSubTeam, useUpdateSubTeam } from "../../hooks/useSubTeams";
 
 import "./AddSubTeamModal.scss";
 
-export default function AddSubTeamModal({ onClose }) {
+export default function AddSubTeamModal({ onClose, editingSubTeam }) {
+  const isEditMode = Boolean(editingSubTeam);
+
   const createSubTeamMutation = useCreateSubTeam();
+  const updateSubTeamMutation = useUpdateSubTeam();
 
   const { data: departmentsData = [], isLoading: departmentsLoading } =
     useDepartments();
@@ -34,6 +37,22 @@ export default function AddSubTeamModal({ onClose }) {
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (!editingSubTeam) return;
+
+    setFormData({
+      name: editingSubTeam.name || "",
+      departmentId: editingSubTeam.departmentId
+        ? String(editingSubTeam.departmentId)
+        : "",
+      leadEmployeeId: editingSubTeam.leadEmployeeId
+        ? String(editingSubTeam.leadEmployeeId)
+        : "",
+      description: editingSubTeam.description || "",
+      active: editingSubTeam.active ?? true,
+    });
+  }, [editingSubTeam]);
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -55,31 +74,44 @@ export default function AddSubTeamModal({ onClose }) {
       return;
     }
 
+    const payload = {
+      name: formData.name,
+      departmentId: Number(formData.departmentId),
+      leadEmployeeId: formData.leadEmployeeId
+        ? Number(formData.leadEmployeeId)
+        : null,
+      description: formData.description,
+      active: formData.active,
+    };
+
     try {
-      await createSubTeamMutation.mutateAsync({
-        name: formData.name,
-        departmentId: Number(formData.departmentId),
-        leadEmployeeId: formData.leadEmployeeId
-          ? Number(formData.leadEmployeeId)
-          : null,
-        description: formData.description,
-        active: formData.active,
-      });
+      if (isEditMode) {
+        await updateSubTeamMutation.mutateAsync({
+          id: editingSubTeam.id,
+          payload,
+        });
+      } else {
+        await createSubTeamMutation.mutateAsync(payload);
+      }
 
       onClose();
     } catch (error) {
       setErrorMessage(
-        error?.response?.data?.message || "Failed to create sub-team."
+        error?.response?.data?.message ||
+          `Failed to ${isEditMode ? "update" : "create"} sub-team.`
       );
     }
   };
+
+  const isSaving =
+    createSubTeamMutation.isPending || updateSubTeamMutation.isPending;
 
   return (
     <div className="modal-overlay">
       <form className="subteam-modal" onSubmit={handleSubmit}>
         <div className="modal-header">
           <div>
-            <h2>Add Sub-Team</h2>
+            <h2>{isEditMode ? "Edit Sub-Team" : "Add Sub-Team"}</h2>
           </div>
 
           <button type="button" className="close-btn" onClick={onClose}>
@@ -154,12 +186,8 @@ export default function AddSubTeamModal({ onClose }) {
             Cancel
           </button>
 
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={createSubTeamMutation.isPending}
-          >
-            {createSubTeamMutation.isPending ? "Creating..." : "Create"}
+          <button type="submit" className="btn-primary" disabled={isSaving}>
+            {isSaving ? "Saving..." : isEditMode ? "Update" : "Create"}
           </button>
         </div>
       </form>

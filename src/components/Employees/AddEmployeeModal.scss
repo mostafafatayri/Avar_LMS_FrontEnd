@@ -108,3 +108,32 @@
   background: white;
   cursor: pointer;
 }
+
+
+.employee-modal,
+.employee-modal * {
+  box-sizing: border-box;
+}
+
+.employee-modal .form-group input,
+.employee-modal .form-group select,
+.employee-modal .form-group textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.modal-error {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

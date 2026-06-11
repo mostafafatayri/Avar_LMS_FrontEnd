@@ -1,17 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+
+import { useDepartments } from "../../hooks/useDepartments";
+import { useSubTeams } from "../../hooks/useSubTeams";
+
 import "./AddRoleModal.scss";
 
 export default function AddRoleModal({
   activeTab,
+  editingItem,
   onClose,
   onCreateRole,
+  onUpdateRole,
   onCreateJobTitle,
+  onUpdateJobTitle,
   onCreateSpecialization,
+  onUpdateSpecialization,
 }) {
+  const isEditMode = Boolean(editingItem);
+
+  const { data: departmentsData = [], isLoading: departmentsLoading } =
+    useDepartments();
+
+  const { data: subTeamsData = [], isLoading: subTeamsLoading } = useSubTeams();
+
+  const departments = Array.isArray(departmentsData)
+    ? departmentsData
+    : departmentsData?.data || [];
+
+  const subTeams = Array.isArray(subTeamsData)
+    ? subTeamsData
+    : subTeamsData?.data || [];
+
   const [roleForm, setRoleForm] = useState({
     name: "",
-    department: "",
+    departmentId: "",
     seniority: "Mid",
     description: "",
     active: true,
@@ -19,43 +42,126 @@ export default function AddRoleModal({
 
   const [jobTitleForm, setJobTitleForm] = useState({
     title: "",
-    department: "",
+    departmentId: "",
     description: "",
     active: true,
   });
 
   const [specializationForm, setSpecializationForm] = useState({
     name: "",
-    department: "",
-    subTeam: "",
+    departmentId: "",
+    subTeamId: "",
     description: "",
     active: true,
   });
 
+  useEffect(() => {
+    if (!editingItem) return;
+
+    if (activeTab === "roles") {
+      setRoleForm({
+        name: editingItem.name || "",
+        departmentId: editingItem.departmentId ? String(editingItem.departmentId) : "",
+        seniority: editingItem.seniority || "Mid",
+        description: editingItem.description || "",
+        active: editingItem.active ?? true,
+      });
+    }
+
+    if (activeTab === "jobTitles") {
+      setJobTitleForm({
+        title: editingItem.name || editingItem.title || "",
+        departmentId: editingItem.departmentId ? String(editingItem.departmentId) : "",
+        description: editingItem.description || "",
+        active: editingItem.active ?? true,
+      });
+    }
+
+    if (activeTab === "specializations") {
+      setSpecializationForm({
+        name: editingItem.name || "",
+        departmentId: editingItem.departmentId ? String(editingItem.departmentId) : "",
+        subTeamId: editingItem.subTeamId ? String(editingItem.subTeamId) : "",
+        description: editingItem.description || "",
+        active: editingItem.active ?? true,
+      });
+    }
+  }, [editingItem, activeTab]);
+
+  const filteredSubTeams = subTeams.filter((team) => {
+    if (!specializationForm.departmentId) return true;
+    return String(team.departmentId) === String(specializationForm.departmentId);
+  });
+
   const getModalTitle = () => {
-    if (activeTab === "roles") return "Add Role";
-    if (activeTab === "jobTitles") return "Add Job Title";
-    return "Add Specialization";
+    if (activeTab === "roles") return isEditMode ? "Edit Role" : "Add Role";
+    if (activeTab === "jobTitles")
+      return isEditMode ? "Edit Job Title" : "Add Job Title";
+    return isEditMode ? "Edit Specialization" : "Add Specialization";
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (activeTab === "roles") {
-      if (!roleForm.name.trim()) return;
-      onCreateRole(roleForm);
+      if (!roleForm.name.trim() || !roleForm.departmentId) return;
+
+      const payload = {
+        ...roleForm,
+        departmentId: Number(roleForm.departmentId),
+      };
+
+      isEditMode
+        ? onUpdateRole?.(editingItem.id, payload)
+        : onCreateRole?.(payload);
     }
 
     if (activeTab === "jobTitles") {
-      if (!jobTitleForm.title.trim()) return;
-      onCreateJobTitle(jobTitleForm);
+      if (!jobTitleForm.title.trim() || !jobTitleForm.departmentId) return;
+
+      const payload = {
+        ...jobTitleForm,
+        departmentId: Number(jobTitleForm.departmentId),
+      };
+
+      isEditMode
+        ? onUpdateJobTitle?.(editingItem.id, payload)
+        : onCreateJobTitle?.(payload);
     }
 
     if (activeTab === "specializations") {
-      if (!specializationForm.name.trim()) return;
-      onCreateSpecialization(specializationForm);
+      if (!specializationForm.name.trim() || !specializationForm.departmentId)
+        return;
+
+      const payload = {
+        name: specializationForm.name,
+        departmentId: Number(specializationForm.departmentId),
+        subTeamId: specializationForm.subTeamId
+          ? Number(specializationForm.subTeamId)
+          : null,
+        description: specializationForm.description,
+        active: specializationForm.active,
+      };
+
+      isEditMode
+        ? onUpdateSpecialization?.(editingItem.id, payload)
+        : onCreateSpecialization?.(payload);
     }
   };
+
+  const renderDepartmentOptions = () => (
+    <>
+      <option value="">
+        {departmentsLoading ? "Loading departments..." : "Select department"}
+      </option>
+
+      {departments.map((department) => (
+        <option key={department.id} value={department.id}>
+          {department.name}
+        </option>
+      ))}
+    </>
+  );
 
   return (
     <div className="modal-overlay">
@@ -83,19 +189,15 @@ export default function AddRoleModal({
                 </div>
 
                 <div className="form-group">
-                  <label>Department</label>
+                  <label>Department *</label>
                   <select
-                    value={roleForm.department}
+                    value={roleForm.departmentId}
+                    disabled={departmentsLoading}
                     onChange={(e) =>
-                      setRoleForm({ ...roleForm, department: e.target.value })
+                      setRoleForm({ ...roleForm, departmentId: e.target.value })
                     }
                   >
-                    <option value="">Select</option>
-                    <option value="Human Resources">Human Resources</option>
-                    <option value="Information Technology">Information Technology</option>
-                    <option value="Learning">Learning</option>
-                    <option value="Operations">Operations</option>
-                    <option value="Finance">Finance</option>
+                    {renderDepartmentOptions()}
                   </select>
                 </div>
 
@@ -143,22 +245,18 @@ export default function AddRoleModal({
                 </div>
 
                 <div className="form-group">
-                  <label>Department</label>
+                  <label>Department *</label>
                   <select
-                    value={jobTitleForm.department}
+                    value={jobTitleForm.departmentId}
+                    disabled={departmentsLoading}
                     onChange={(e) =>
                       setJobTitleForm({
                         ...jobTitleForm,
-                        department: e.target.value,
+                        departmentId: e.target.value,
                       })
                     }
                   >
-                    <option value="">Select</option>
-                    <option value="Human Resources">Human Resources</option>
-                    <option value="Information Technology">Information Technology</option>
-                    <option value="Learning">Learning</option>
-                    <option value="Operations">Operations</option>
-                    <option value="Finance">Finance</option>
+                    {renderDepartmentOptions()}
                   </select>
                 </div>
 
@@ -193,41 +291,43 @@ export default function AddRoleModal({
                 </div>
 
                 <div className="form-group">
-                  <label>Department</label>
+                  <label>Department *</label>
                   <select
-                    value={specializationForm.department}
+                    value={specializationForm.departmentId}
+                    disabled={departmentsLoading}
                     onChange={(e) =>
                       setSpecializationForm({
                         ...specializationForm,
-                        department: e.target.value,
+                        departmentId: e.target.value,
+                        subTeamId: "",
                       })
                     }
                   >
-                    <option value="">Select</option>
-                    <option value="Human Resources">Human Resources</option>
-                    <option value="Information Technology">Information Technology</option>
-                    <option value="Learning">Learning</option>
-                    <option value="Operations">Operations</option>
-                    <option value="Finance">Finance</option>
+                    {renderDepartmentOptions()}
                   </select>
                 </div>
 
                 <div className="form-group">
                   <label>Sub-Team</label>
                   <select
-                    value={specializationForm.subTeam}
+                    value={specializationForm.subTeamId}
+                    disabled={subTeamsLoading}
                     onChange={(e) =>
                       setSpecializationForm({
                         ...specializationForm,
-                        subTeam: e.target.value,
+                        subTeamId: e.target.value,
                       })
                     }
                   >
-                    <option value="">Select</option>
-                    <option value="Compliance">Compliance</option>
-                    <option value="IT Support">IT Support</option>
-                    <option value="Learning Operations">Learning Operations</option>
-                    <option value="Accounting">Accounting</option>
+                    <option value="">
+                      {subTeamsLoading ? "Loading sub-teams..." : "Select"}
+                    </option>
+
+                    {filteredSubTeams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -254,7 +354,7 @@ export default function AddRoleModal({
           </button>
 
           <button type="submit" className="btn-primary">
-            Create
+            {isEditMode ? "Update" : "Create"}
           </button>
         </div>
       </form>

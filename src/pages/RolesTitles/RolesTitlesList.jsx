@@ -1,77 +1,93 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, BriefcaseBusiness } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import Sidebar from "../../components/Layout/Sidebar/Sidebar";
 import Topbar from "../../components/Layout/Topbar/Topbar";
 import ActionButton from "../../components/Common/ActionButton/ActionButton";
-
 import RolesTabs from "../../components/RolesTitles/RolesTabs";
 import AddRoleModal from "../../components/RolesTitles/AddRoleModal";
+import RolesTitlesTable from "../../components/RolesTitles/RolesTitlesTable";
+
+import {
+  useEmployeeRoles,
+  useDeleteEmployeeRole,
+  useCreateEmployeeRole,
+  useUpdateEmployeeRole,
+} from "../../hooks/useEmployeeRoles";
+
+import {
+  usePositions,
+  useCreatePosition,
+  useUpdatePosition,
+  useDeletePosition,
+} from "../../hooks/usePositions";
+
+import {
+  useSpecializations,
+  useCreateSpecialization,
+  useUpdateSpecialization,
+  useDeleteSpecialization,
+} from "../../hooks/useSpecializations";
 
 import "./RolesTitlesList.scss";
 
 function RolesTitlesList() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
   const [activeTab, setActiveTab] = useState("roles");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
-  const [roles, setRoles] = useState([
-    {
-      id: 1,
-      name: "Training Manager",
-      department: "Learning",
-      seniority: "Senior",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "Instructor",
-      department: "Learning",
-      seniority: "Mid",
-      active: true,
-    },
-  ]);
+  const { data: rolesData = [], isLoading: rolesLoading } = useEmployeeRoles();
+  const { data: positionsData = [], isLoading: positionsLoading } = usePositions();
+  const { data: specializationsData = [], isLoading: specializationsLoading } =
+    useSpecializations();
 
-  const [jobTitles, setJobTitles] = useState([
-    {
-      id: 1,
-      title: "Frontend Developer",
-      department: "Information Technology",
-      active: true,
-    },
-    {
-      id: 2,
-      title: "HR Coordinator",
-      department: "Human Resources",
-      active: true,
-    },
-  ]);
+  const createRoleMutation = useCreateEmployeeRole();
+  const updateRoleMutation = useUpdateEmployeeRole();
+  const deleteRoleMutation = useDeleteEmployeeRole();
 
-  const [specializations, setSpecializations] = useState([
-    {
-      id: 1,
-      name: "Safety Training",
-      department: "Operations",
-      subTeam: "Compliance",
-      active: true,
-    },
-  ]);
+  const createPositionMutation = useCreatePosition();
+  const updatePositionMutation = useUpdatePosition();
+  const deletePositionMutation = useDeletePosition();
 
-  const handleCreateRole = (payload) => {
-    setRoles((prev) => [...prev, { id: Date.now(), ...payload }]);
+  const createSpecializationMutation = useCreateSpecialization();
+  const updateSpecializationMutation = useUpdateSpecialization();
+  const deleteSpecializationMutation = useDeleteSpecialization();
+
+  const roles = Array.isArray(rolesData) ? rolesData : rolesData?.data || [];
+  const jobTitles = Array.isArray(positionsData)
+    ? positionsData
+    : positionsData?.data || [];
+  const specializations = Array.isArray(specializationsData)
+    ? specializationsData
+    : specializationsData?.data || [];
+
+  const closeModal = () => {
     setShowAddModal(false);
+    setEditingItem(null);
   };
 
-  const handleCreateJobTitle = (payload) => {
-    setJobTitles((prev) => [...prev, { id: Date.now(), ...payload }]);
-    setShowAddModal(false);
+  const handleEdit = (item) => {
+    setEditingItem(item);
+    setShowAddModal(true);
   };
 
-  const handleCreateSpecialization = (payload) => {
-    setSpecializations((prev) => [...prev, { id: Date.now(), ...payload }]);
-    setShowAddModal(false);
+  const handleDelete = async (item) => {
+    if (activeTab === "roles") {
+      if (!window.confirm("Delete this role?")) return;
+      await deleteRoleMutation.mutateAsync(item.id);
+    }
+
+    if (activeTab === "jobTitles") {
+      if (!window.confirm("Delete this job title?")) return;
+      await deletePositionMutation.mutateAsync(item.id);
+    }
+
+    if (activeTab === "specializations") {
+      if (!window.confirm("Delete this specialization?")) return;
+      await deleteSpecializationMutation.mutateAsync(item.id);
+    }
   };
 
   const getAddButtonText = () => {
@@ -98,7 +114,13 @@ function RolesTitlesList() {
           </div>
 
           <div className="page-actions">
-            <ActionButton icon={Plus} onClick={() => setShowAddModal(true)}>
+            <ActionButton
+              icon={Plus}
+              onClick={() => {
+                setEditingItem(null);
+                setShowAddModal(true);
+              }}
+            >
               {getAddButtonText()}
             </ActionButton>
           </div>
@@ -106,158 +128,91 @@ function RolesTitlesList() {
 
         <RolesTabs
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab);
+            setEditingItem(null);
+            setShowAddModal(false);
+          }}
           rolesCount={roles.length}
           jobTitlesCount={jobTitles.length}
           specializationsCount={specializations.length}
         />
 
-        {activeTab === "roles" && (
-          <div className="roles-table-card">
-            <table className="roles-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Seniority</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {roles.map((role) => (
-                  <tr key={role.id}>
-                    <td>{role.name}</td>
-                    <td>{role.department || "—"}</td>
-                    <td>
-                      <span className="seniority-pill">{role.seniority}</span>
-                    </td>
-                    <td>
-                      <span className={`status ${role.active ? "active" : "inactive"}`}>
-                        {role.active ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="roles-actions">
-                        <button type="button">
-                          <Pencil size={17} />
-                        </button>
-                        <button type="button" className="delete">
-                          <Trash2 size={17} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === "jobTitles" && (
-          <div className="roles-table-card">
-            <table className="roles-table job-title-table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Department</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {jobTitles.map((jobTitle) => (
-                  <tr key={jobTitle.id}>
-                    <td>{jobTitle.title}</td>
-                    <td>{jobTitle.department || "—"}</td>
-                    <td>
-                      <span className={`status ${jobTitle.active ? "active" : "inactive"}`}>
-                        {jobTitle.active ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="roles-actions">
-                        <button type="button">
-                          <Pencil size={17} />
-                        </button>
-                        <button type="button" className="delete">
-                          <Trash2 size={17} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === "specializations" && (
-          <>
-            {specializations.length > 0 ? (
-              <div className="roles-table-card">
-                <table className="roles-table specialization-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Department</th>
-                      <th>Sub-Team</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {specializations.map((specialization) => (
-                      <tr key={specialization.id}>
-                        <td>{specialization.name}</td>
-                        <td>{specialization.department || "—"}</td>
-                        <td>{specialization.subTeam || "—"}</td>
-                        <td>
-                          <span
-                            className={`status ${
-                              specialization.active ? "active" : "inactive"
-                            }`}
-                          >
-                            {specialization.active ? "Active" : "Inactive"}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="roles-actions">
-                            <button type="button">
-                              <Pencil size={17} />
-                            </button>
-                            <button type="button" className="delete">
-                              <Trash2 size={17} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="roles-empty-card">
-                <div className="roles-empty-icon">
-                  <BriefcaseBusiness size={32} />
-                </div>
-                <h3>No specializations</h3>
-              </div>
-            )}
-          </>
-        )}
+        <RolesTitlesTable
+          data={
+            activeTab === "roles"
+              ? roles
+              : activeTab === "jobTitles"
+              ? jobTitles
+              : specializations
+          }
+          activeTab={activeTab}
+          isLoading={
+            activeTab === "roles"
+              ? rolesLoading
+              : activeTab === "jobTitles"
+              ? positionsLoading
+              : specializationsLoading
+          }
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </main>
 
       {showAddModal && (
         <AddRoleModal
           activeTab={activeTab}
-          onClose={() => setShowAddModal(false)}
-          onCreateRole={handleCreateRole}
-          onCreateJobTitle={handleCreateJobTitle}
-          onCreateSpecialization={handleCreateSpecialization}
+          editingItem={editingItem}
+          onClose={closeModal}
+          onCreateRole={(payload) =>
+            createRoleMutation.mutate(payload, {
+              onSuccess: closeModal,
+            })
+          }
+          onUpdateRole={(id, payload) =>
+            updateRoleMutation.mutate(
+              { id, payload },
+              { onSuccess: closeModal }
+            )
+          }
+          onCreateJobTitle={(payload) =>
+            createPositionMutation.mutate(
+              {
+                code: payload.title.toUpperCase().replaceAll(" ", "_"),
+                name: payload.title,
+                departmentId: payload.departmentId,
+                description: payload.description,
+                active: payload.active,
+              },
+              { onSuccess: closeModal }
+            )
+          }
+          onUpdateJobTitle={(id, payload) =>
+            updatePositionMutation.mutate(
+              {
+                id,
+                payload: {
+                  code: payload.title.toUpperCase().replaceAll(" ", "_"),
+                  name: payload.title,
+                  departmentId: payload.departmentId,
+                  description: payload.description,
+                  active: payload.active,
+                },
+              },
+              { onSuccess: closeModal }
+            )
+          }
+          onCreateSpecialization={(payload) =>
+            createSpecializationMutation.mutate(payload, {
+              onSuccess: closeModal,
+            })
+          }
+          onUpdateSpecialization={(id, payload) =>
+            updateSpecializationMutation.mutate(
+              { id, payload },
+              { onSuccess: closeModal }
+            )
+          }
         />
       )}
     </div>

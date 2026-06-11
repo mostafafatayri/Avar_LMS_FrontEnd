@@ -2,13 +2,27 @@ import { BriefcaseBusiness } from "lucide-react";
 import TableActions from "../Common/TableActions/TableActions";
 import "../Common/TableActions/TableActions.scss";
 
-export default function RolesTitlesTable({ data = [], activeTab }) {
+export default function RolesTitlesTable({
+  data = [],
+  activeTab,
+  isLoading = false,
+  onEdit,
+  onDelete,
+}) {
   const emptyText =
     activeTab === "roles"
       ? "No roles"
       : activeTab === "jobTitles"
       ? "No job titles"
       : "No specializations";
+
+  if (isLoading) {
+    return (
+      <div className="roles-master-empty-card">
+        <h3>Loading...</h3>
+      </div>
+    );
+  }
 
   if (!data.length) {
     return (
@@ -62,21 +76,23 @@ export default function RolesTitlesTable({ data = [], activeTab }) {
               {activeTab === "roles" && (
                 <>
                   <td>{item.name}</td>
-                  <td>{item.department || "—"}</td>
+                  <td>{item.departmentName || item.department || "—"}</td>
                   <td>
                     <span className="seniority-pill">
                       {item.seniority || "Mid"}
                     </span>
                   </td>
                   <td>
-                    <span className={`status ${item.active ? "active" : "inactive"}`}>
+                    <span
+                      className={`status ${item.active ? "active" : "inactive"}`}
+                    >
                       {item.active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td>
                     <TableActions
-                      onEdit={() => console.log("Edit", item)}
-                      onDelete={() => console.log("Delete", item)}
+                      onEdit={() => onEdit?.(item)}
+                      onDelete={() => onDelete?.(item)}
                     />
                   </td>
                 </>
@@ -84,17 +100,19 @@ export default function RolesTitlesTable({ data = [], activeTab }) {
 
               {activeTab === "jobTitles" && (
                 <>
-                  <td>{item.title}</td>
-                  <td>{item.department || "—"}</td>
+                  <td>{item.name || item.title}</td>
+                  <td>{item.departmentName || item.department || "—"}</td>
                   <td>
-                    <span className={`status ${item.active ? "active" : "inactive"}`}>
+                    <span
+                      className={`status ${item.active ? "active" : "inactive"}`}
+                    >
                       {item.active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td>
                     <TableActions
-                      onEdit={() => console.log("Edit", item)}
-                      onDelete={() => console.log("Delete", item)}
+                      onEdit={() => onEdit?.(item)}
+                      onDelete={() => onDelete?.(item)}
                     />
                   </td>
                 </>
@@ -103,17 +121,19 @@ export default function RolesTitlesTable({ data = [], activeTab }) {
               {activeTab === "specializations" && (
                 <>
                   <td>{item.name}</td>
-                  <td>{item.department || "—"}</td>
-                  <td>{item.subTeam || "—"}</td>
+                  <td>{item.departmentName || item.department || "—"}</td>
+                  <td>{item.subTeamName || item.subTeam || "—"}</td>
                   <td>
-                    <span className={`status ${item.active ? "active" : "inactive"}`}>
+                    <span
+                      className={`status ${item.active ? "active" : "inactive"}`}
+                    >
                       {item.active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td>
                     <TableActions
-                      onEdit={() => console.log("Edit", item)}
-                      onDelete={() => console.log("Delete", item)}
+                      onEdit={() => onEdit?.(item)}
+                      onDelete={() => onDelete?.(item)}
                     />
                   </td>
                 </>

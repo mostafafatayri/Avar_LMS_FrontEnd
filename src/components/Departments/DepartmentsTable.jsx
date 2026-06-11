@@ -1,7 +1,12 @@
 import TableActions from "../Common/TableActions/TableActions";
 import "../Common/TableActions/TableActions.scss";
 
-export default function DepartmentsTable({ departments = [], isLoading = false }) {
+export default function DepartmentsTable({
+  departments = [],
+  isLoading = false,
+  onEdit,
+  onDelete,
+}) {
   if (isLoading) {
     return (
       <div className="departments-table-wrapper">
@@ -48,8 +53,8 @@ export default function DepartmentsTable({ departments = [], isLoading = false }
               </td>
               <td>
                 <TableActions
-                  onEdit={() => console.log("Edit", dept)}
-                  onDelete={() => console.log("Delete", dept)}
+                  onEdit={() => onEdit?.(dept)}
+                  onDelete={() => onDelete?.(dept)}
                 />
               </td>
             </tr>

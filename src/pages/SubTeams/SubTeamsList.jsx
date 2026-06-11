@@ -14,17 +14,30 @@ function SubTeamsList() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingSubTeam, setEditingSubTeam] = useState(null);
 
   const { data, isLoading, isError, error } = useSubTeams();
   const deleteSubTeamMutation = useDeleteSubTeam();
 
   const subTeams = Array.isArray(data) ? data : data?.data || [];
 
+  const openCreateModal = () => {
+    setEditingSubTeam(null);
+    setShowAddModal(true);
+  };
+
+  const openEditModal = (team) => {
+    setEditingSubTeam(team);
+    setShowAddModal(true);
+  };
+
+  const closeModal = () => {
+    setEditingSubTeam(null);
+    setShowAddModal(false);
+  };
+
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this sub-team?");
-
-    if (!confirmed) return;
-
+    if (!window.confirm("Are you sure you want to delete this sub-team?")) return;
     await deleteSubTeamMutation.mutateAsync(id);
   };
 
@@ -51,7 +64,7 @@ function SubTeamsList() {
           </div>
 
           <div className="page-actions">
-            <ActionButton icon={Plus} onClick={() => setShowAddModal(true)}>
+            <ActionButton icon={Plus} onClick={openCreateModal}>
               Add Sub-Team
             </ActionButton>
           </div>
@@ -101,7 +114,7 @@ function SubTeamsList() {
                     </td>
                     <td>
                       <div className="subteams-actions">
-                        <button type="button">
+                        <button type="button" onClick={() => openEditModal(team)}>
                           <Pencil size={17} />
                         </button>
 
@@ -130,7 +143,7 @@ function SubTeamsList() {
       </main>
 
       {showAddModal && (
-        <AddSubTeamModal onClose={() => setShowAddModal(false)} />
+        <AddSubTeamModal onClose={closeModal} editingSubTeam={editingSubTeam} />
       )}
     </div>
   );

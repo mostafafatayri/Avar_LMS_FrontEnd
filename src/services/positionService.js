@@ -42,3 +42,8 @@ export const bulkUploadPositions = async (file) => {
 
   return response.data;
 };
+
+export const deletePosition = async (id) => {
+  const response = await api.delete(`/positions/${id}`);
+  return response.data;
+};

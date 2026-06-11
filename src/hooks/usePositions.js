@@ -5,6 +5,7 @@ import {
   setPositionActive,
   setPositionInactive,
   updatePosition,
+  deletePosition
 } from "../services/positionService";
 
 export function usePositions() {
@@ -52,6 +53,17 @@ export function useSetPositionActive() {
 
   return useMutation({
     mutationFn: setPositionActive,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["positions"] });
+    },
+  });
+}
+
+export function useDeletePosition() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deletePosition,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["positions"] });
     },

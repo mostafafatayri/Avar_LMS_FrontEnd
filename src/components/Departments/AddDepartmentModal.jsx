@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { useCreateDepartment } from "../../hooks/useDepartments";
+
+import {
+  useCreateDepartment,
+  useUpdateDepartment,
+} from "../../hooks/useDepartments";
 
 import "./AddDepartmentModal.scss";
 
-export default function AddDepartmentModal({ onClose }) {
+export default function AddDepartmentModal({ onClose, editingDepartment }) {
+  const isEditMode = Boolean(editingDepartment);
+
   const createDepartmentMutation = useCreateDepartment();
+  const updateDepartmentMutation = useUpdateDepartment();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -16,6 +23,18 @@ export default function AddDepartmentModal({ onClose }) {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (!editingDepartment) return;
+
+    setFormData({
+      name: editingDepartment.name || "",
+      code: editingDepartment.code || "",
+      managerName: editingDepartment.managerName || "",
+      active: editingDepartment.active ?? true,
+      description: editingDepartment.description || "",
+    });
+  }, [editingDepartment]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({
@@ -33,30 +52,47 @@ export default function AddDepartmentModal({ onClose }) {
       return;
     }
 
+    const payload = {
+      name: formData.name,
+      code: formData.code,
+      managerName: formData.managerName,
+      active: formData.active,
+      description: formData.description,
+    };
+
     try {
-      await createDepartmentMutation.mutateAsync({
-        name: formData.name,
-        code: formData.code,
-        managerName: formData.managerName,
-        active: formData.active,
-        description: formData.description,
-      });
+      if (isEditMode) {
+        await updateDepartmentMutation.mutateAsync({
+          id: editingDepartment.id,
+          payload,
+        });
+      } else {
+        await createDepartmentMutation.mutateAsync(payload);
+      }
 
       onClose();
     } catch (error) {
       setErrorMessage(
-        error?.response?.data?.message || "Failed to create department."
+        error?.response?.data?.message ||
+          `Failed to ${isEditMode ? "update" : "create"} department.`
       );
     }
   };
+
+  const isSaving =
+    createDepartmentMutation.isPending || updateDepartmentMutation.isPending;
 
   return (
     <div className="modal-overlay">
       <form className="department-modal" onSubmit={handleSubmit}>
         <div className="modal-header">
           <div>
-            <h2>Add Department</h2>
-            <p>Create a new department.</p>
+            <h2>{isEditMode ? "Edit Department" : "Add Department"}</h2>
+            <p>
+              {isEditMode
+                ? "Update department information."
+                : "Create a new department."}
+            </p>
           </div>
 
           <button type="button" className="close-btn" onClick={onClose}>
@@ -125,13 +161,11 @@ export default function AddDepartmentModal({ onClose }) {
             Cancel
           </button>
 
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={createDepartmentMutation.isPending}
-          >
-            {createDepartmentMutation.isPending
+          <button type="submit" className="btn-primary" disabled={isSaving}>
+            {isSaving
               ? "Saving..."
+              : isEditMode
+              ? "Update Department"
               : "Save Department"}
           </button>
         </div>
