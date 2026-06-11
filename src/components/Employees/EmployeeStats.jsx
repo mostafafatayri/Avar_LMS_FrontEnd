@@ -1,35 +1,32 @@
-import {
-  Users,
-  UserPlus,
-  UserCheck,
-  UserX,
-} from "lucide-react";
+import { Users, UserPlus, UserCheck, UserX } from "lucide-react";
 
-//import "./EmployeeStats.scss";
+export default function EmployeeStats({ employees = [] }) {
+  const totalEmployees = employees.length;
+  const activeEmployees = employees.filter((e) => e.status === "ACTIVE").length;
+  const inactiveEmployees = employees.filter((e) => e.status === "INACTIVE").length;
 
-export default function EmployeeStats() {
   const stats = [
     {
       title: "Total Employees",
-      value: "248",
+      value: totalEmployees,
       icon: Users,
       color: "blue",
     },
     {
       title: "New This Month",
-      value: "18",
+      value: 0,
       icon: UserPlus,
       color: "green",
     },
     {
       title: "Active Employees",
-      value: "230",
+      value: activeEmployees,
       icon: UserCheck,
       color: "yellow",
     },
     {
       title: "Inactive Employees",
-      value: "18",
+      value: inactiveEmployees,
       icon: UserX,
       color: "purple",
     },

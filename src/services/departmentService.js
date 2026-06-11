@@ -11,16 +11,10 @@ export const createDepartment = async (payload) => {
 };
 
 
-
-
-
-
 export const getDepartmentById = async (id) => {
   const response = await api.get(`/departments/${id}`);
   return response.data;
 };
-
-
 
 export const updateDepartment = async ({ id, payload }) => {
   const response = await api.put(`/departments/${id}`, payload);

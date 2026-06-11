@@ -1,31 +1,14 @@
-import {
-  MoreHorizontal,
-} from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
+import EmployeeStatusBadge from "./EmployeeStatusBadge";
 
-export default function EmployeesTable() {
-  const employees = [
-    {
-      id: "EMP-001",
-      name: "Wael Abed",
-      department: "Product",
-      role: "Product Manager",
-      status: "Active",
-    },
-    {
-      id: "EMP-002",
-      name: "Sarah Haddad",
-      department: "Design",
-      role: "UI/UX Designer",
-      status: "Active",
-    },
-    {
-      id: "EMP-003",
-      name: "Omar Masri",
-      department: "Engineering",
-      role: "Frontend Developer",
-      status: "Active",
-    },
-  ];
+export default function EmployeesTable({ employees = [], isLoading = false }) {
+  if (isLoading) {
+    return (
+      <div className="employees-table-wrapper">
+        <div className="table-empty">Loading employees...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="employees-table-wrapper">
@@ -34,29 +17,35 @@ export default function EmployeesTable() {
           <tr>
             <th>Employee ID</th>
             <th>Name</th>
+            <th>Email</th>
             <th>Department</th>
-            <th>Role</th>
+            <th>Job Title</th>
             <th>Status</th>
             <th />
           </tr>
         </thead>
 
         <tbody>
+          {employees.length === 0 && (
+            <tr>
+              <td colSpan="7" className="table-empty">
+                No employees found.
+              </td>
+            </tr>
+          )}
+
           {employees.map((employee) => (
             <tr key={employee.id}>
-              <td>{employee.id}</td>
-              <td>{employee.name}</td>
+              <td>{employee.employeeId}</td>
+              <td>{employee.fullName}</td>
+              <td>{employee.email}</td>
               <td>{employee.department}</td>
-              <td>{employee.role}</td>
-
+              <td>{employee.jobTitle}</td>
               <td>
-                <span className="status active">
-                  {employee.status}
-                </span>
+                <EmployeeStatusBadge status={employee.status} />
               </td>
-
               <td>
-                <button className="action-icon">
+                <button className="action-icon" type="button">
                   <MoreHorizontal size={18} />
                 </button>
               </td>

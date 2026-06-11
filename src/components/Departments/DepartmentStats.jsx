@@ -1,33 +1,42 @@
-import {
-  Building2,
-  Users,
-  FolderTree,
-  PieChart,
-} from "lucide-react";
+import { Building2, Users, FolderTree, PieChart } from "lucide-react";
 
-export default function DepartmentStats() {
+export default function DepartmentStats({ departments = [] }) {
+  const totalDepartments = departments.length;
+
+  const activeDepartments = departments.filter((dept) => dept.active).length;
+
+  const totalEmployees = departments.reduce(
+    (sum, dept) => sum + (dept.employeeCount || 0),
+    0
+  );
+
+  const totalSubTeams = departments.reduce(
+    (sum, dept) => sum + (dept.subTeamCount || 0),
+    0
+  );
+
   const stats = [
     {
       title: "Total Departments",
-      value: "12",
+      value: totalDepartments,
       icon: Building2,
       color: "blue",
     },
     {
       title: "Total Employees",
-      value: "248",
+      value: totalEmployees,
       icon: Users,
       color: "green",
     },
     {
       title: "Sub Teams",
-      value: "25",
+      value: totalSubTeams,
       icon: FolderTree,
       color: "purple",
     },
     {
       title: "Active Departments",
-      value: "11",
+      value: activeDepartments,
       icon: PieChart,
       color: "orange",
     },

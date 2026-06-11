@@ -14,7 +14,7 @@ export default function RolesTitlesFilterBar() {
       </div>
 
       <div className="filter-field">
-        <label>Type</label>
+        <label>Type</label> 
         <select>
           <option>All Types</option>
           <option>System</option>

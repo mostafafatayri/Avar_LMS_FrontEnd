@@ -12,6 +12,7 @@ import LearningPathsList from "./pages/LearningPaths/LearningPathsList";
 import AssignmentsList from "./pages/Assignments/AssignmentsList";
 import LiveSessionsList from "./pages/LiveSessions/LiveSessionsList";
 import MyTrainingsList from "./pages/MyTrainings/MyTrainingsList";
+
 function App() {
   return (
     <BrowserRouter>
@@ -108,6 +109,9 @@ function App() {
      
   }
 />
+
+ <Route path="/login" element={<LoginPage />} />
+
 
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
-//import "./EmployeeStatusBadge.scss";
-
 export default function EmployeeStatusBadge({ status }) {
+  const normalizedStatus = status || "INACTIVE";
+
   const labels = {
     ACTIVE: "Active",
     INACTIVE: "Inactive",
@@ -8,8 +8,8 @@ export default function EmployeeStatusBadge({ status }) {
   };
 
   return (
-    <span className={`employee-status ${status?.toLowerCase()}`}>
-      {labels[status] || status}
+    <span className={`employee-status ${normalizedStatus.toLowerCase()}`}>
+      {labels[normalizedStatus] || normalizedStatus}
     </span>
   );
 }

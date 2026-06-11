@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus, UploadCloud } from "lucide-react";
 
 import Sidebar from "../../components/Layout/Sidebar/Sidebar";
@@ -11,6 +11,9 @@ import EmployeesTable from "../../components/Employees/EmployeesTable";
 import AddEmployeeModal from "../../components/Employees/AddEmployeeModal";
 import BulkUploadModal from "../../components/Common/BulkUploadModal/BulkUploadModal";
 
+import { useEmployees } from "../../hooks/useEmployees";
+import { bulkUploadEmployees } from "../../services/employeeService";
+
 import "./EmployeesList.scss";
 
 export default function EmployeesList() {
@@ -19,23 +22,60 @@ export default function EmployeesList() {
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
 
-  
-  const openAddEmployeeModal = () => {
-    console.log("helllowwww")
-    
-    setShowAddEmployeeModal(true);
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
 
-  const closeAddEmployeeModal = () => {
-    setShowAddEmployeeModal(false);
-  };
+  const { data = [], isLoading, isError, error, refetch } = useEmployees();
 
-  const openBulkUploadModal = () => {
-    setShowBulkUploadModal(true);
-  };
+  const employees = Array.isArray(data) ? data : [];
 
-  const closeBulkUploadModal = () => {
+  const filteredEmployees = useMemo(() => {
+    let result = [...employees];
+
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+
+      result = result.filter((employee) => {
+        return (
+          employee.fullName?.toLowerCase().includes(term) ||
+          employee.email?.toLowerCase().includes(term) ||
+          employee.employeeId?.toLowerCase().includes(term) ||
+          employee.department?.toLowerCase().includes(term) ||
+          employee.jobTitle?.toLowerCase().includes(term)
+        );
+      });
+    }
+
+    if (departmentFilter !== "ALL") {
+      result = result.filter(
+        (employee) => employee.department === departmentFilter
+      );
+    }
+
+    if (statusFilter !== "ALL") {
+      result = result.filter((employee) => employee.status === statusFilter);
+    }
+
+    return result;
+  }, [employees, searchTerm, departmentFilter, statusFilter]);
+
+  const departmentOptions = useMemo(() => {
+    const uniqueDepartments = new Set();
+
+    employees.forEach((employee) => {
+      if (employee.department && employee.department !== "-") {
+        uniqueDepartments.add(employee.department);
+      }
+    });
+
+    return Array.from(uniqueDepartments);
+  }, [employees]);
+
+  const handleBulkUpload = async (file) => {
+    await bulkUploadEmployees(file);
     setShowBulkUploadModal(false);
+    refetch();
   };
 
   return (
@@ -64,7 +104,7 @@ export default function EmployeesList() {
             <ActionButton
               icon={UploadCloud}
               variant="secondary"
-              onClick={openBulkUploadModal}
+              onClick={() => setShowBulkUploadModal(true)}
             >
               Bulk Upload
             </ActionButton>
@@ -72,24 +112,49 @@ export default function EmployeesList() {
             <ActionButton
               icon={Plus}
               variant="primary"
-              onClick={openAddEmployeeModal}
+              onClick={() => setShowAddEmployeeModal(true)}
             >
               Add Employee
             </ActionButton>
           </div>
         </section>
 
-        <EmployeeStats />
-        <EmployeesFilterBar />
-        <EmployeesTable />
+        {isError && (
+          <div className="page-error">
+            {error?.response?.data?.message || "Failed to load employees."}
+          </div>
+        )}
+
+        <EmployeeStats employees={employees} />
+
+        <EmployeesFilterBar
+          searchTerm={searchTerm}
+          departmentFilter={departmentFilter}
+          statusFilter={statusFilter}
+          departmentOptions={departmentOptions}
+          onSearchChange={setSearchTerm}
+          onDepartmentChange={setDepartmentFilter}
+          onStatusChange={setStatusFilter}
+        />
+
+        <EmployeesTable employees={filteredEmployees} isLoading={isLoading} />
       </main>
 
-      {showAddEmployeeModal === true && (
-        <AddEmployeeModal onClose={closeAddEmployeeModal} />
+      {showAddEmployeeModal && (
+        <AddEmployeeModal
+          onClose={() => setShowAddEmployeeModal(false)}
+          onSuccess={refetch}
+        />
       )}
 
-      {showBulkUploadModal === true && (
-        <BulkUploadModal onClose={closeBulkUploadModal} />
+      {showBulkUploadModal && (
+        <BulkUploadModal
+          onClose={() => setShowBulkUploadModal(false)}
+          onUpload={handleBulkUpload}
+          title="Bulk Upload Employees"
+          description="Upload an Excel file to create employees in bulk."
+          uploadButtonText="Upload Employees"
+        />
       )}
     </div>
   );

@@ -175,3 +175,34 @@
   z-index: 30;
   pointer-events: auto;
 }
+
+.table-empty {
+  padding: 36px;
+  text-align: center;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.employee-status {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+
+  &.active {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+  }
+
+  &.inactive {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  &.on_leave {
+    background: #fef3c7;
+    color: #92400e;
+  }
+}

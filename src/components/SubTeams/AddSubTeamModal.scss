@@ -1,26 +1,28 @@
 .subteam-modal {
-  width: 820px;
+  width: 620px;
   max-width: 95%;
-  background: white;
+  background: #ffffff;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.18);
+  box-sizing: border-box;
 }
 
-.full-width {
-  grid-column: span 2;
+.subteam-modal * {
+  box-sizing: border-box;
 }
 
-textarea {
+.subteam-modal .modal-body {
+  padding: 24px;
+}
+
+.single-column {
+  grid-template-columns: 1fr;
+}
+
+.subteam-modal .form-group input,
+.subteam-modal .form-group select,
+.subteam-modal .form-group textarea {
   width: 100%;
-  border: 1px solid #dbe2ea;
-  border-radius: 10px;
-  padding: 12px;
-  resize: none;
-  font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: #2563eb;
-  }
+  max-width: 100%;
 }

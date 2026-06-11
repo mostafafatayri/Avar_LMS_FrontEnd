@@ -1,33 +1,22 @@
 import TableActions from "../Common/TableActions/TableActions";
 import "../Common/TableActions/TableActions.scss";
 
-export default function DepartmentsTable() {
-  const departments = [
-    {
-      name: "Human Resources",
-      code: "HR",
-      manager: "Sarah Johnson",
-      employees: 28,
-      teams: 3,
-      status: "Active",
-    },
-    {
-      name: "Information Technology",
-      code: "IT",
-      manager: "Michael Brown",
-      employees: 42,
-      teams: 5,
-      status: "Active",
-    },
-    {
-      name: "Finance",
-      code: "FIN",
-      manager: "Emily Davis",
-      employees: 19,
-      teams: 2,
-      status: "Active",
-    },
-  ];
+export default function DepartmentsTable({ departments = [], isLoading = false }) {
+  if (isLoading) {
+    return (
+      <div className="departments-table-wrapper">
+        <div className="table-empty">Loading departments...</div>
+      </div>
+    );
+  }
+
+  if (!departments.length) {
+    return (
+      <div className="departments-table-wrapper">
+        <div className="table-empty">No departments found.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="departments-table-wrapper">
@@ -46,14 +35,16 @@ export default function DepartmentsTable() {
 
         <tbody>
           {departments.map((dept) => (
-            <tr key={dept.code}>
+            <tr key={dept.id || dept.code}>
               <td>{dept.name}</td>
-              <td>{dept.code}</td>
-              <td>{dept.manager}</td>
-              <td>{dept.employees}</td>
-              <td>{dept.teams}</td>
+              <td>{dept.code || "-"}</td>
+              <td>{dept.managerName || "-"}</td>
+              <td>{dept.employeeCount ?? 0}</td>
+              <td>{dept.subTeamCount ?? 0}</td>
               <td>
-                <span className="status active">{dept.status}</span>
+                <span className={`status ${dept.active ? "active" : "inactive"}`}>
+                  {dept.active ? "Active" : "Inactive"}
+                </span>
               </td>
               <td>
                 <TableActions
