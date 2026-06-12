@@ -40,7 +40,7 @@ export default function LoginPage() {
 
       await login(identifier, password);
 
-      navigate("/home", { replace: true });
+     navigate("/select-organization", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
 

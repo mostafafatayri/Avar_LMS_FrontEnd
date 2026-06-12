@@ -4,6 +4,10 @@ import { jwtDecode } from "jwt-decode";
 const ACCESS_TOKEN_KEY = "accessToken";
 const CURRENT_USER_KEY = "currentUser";
 
+const SELECTED_ORG_ID_KEY = "selectedOrganizationId";
+const SELECTED_ORG_NAME_KEY = "selectedOrganizationName";
+const SELECTED_ORG_CODE_KEY = "selectedOrganizationCode";
+
 let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY) || null;
 
 const buildCurrentUserFromToken = (token) => {
@@ -14,18 +18,13 @@ const buildCurrentUserFromToken = (token) => {
   return {
     userId: decoded.userId ?? null,
     employeeId: decoded.employeeId ?? null,
-
     username: decoded.username ?? "",
     email: decoded.sub ?? decoded.email ?? "",
-
     fullName: decoded.fullName ?? "",
-
     departmentId: decoded.departmentId ?? null,
     departmentName: decoded.departmentName ?? "",
-
     positionId: decoded.positionId ?? null,
     positionName: decoded.positionName ?? "",
-
     roles: decoded.roles ?? decoded.authorities ?? [],
   };
 };
@@ -47,46 +46,45 @@ export const getCurrentUser = () => {
   return user ? JSON.parse(user) : null;
 };
 
-export const getCurrentUserId = () => {
-  return getCurrentUser()?.userId ?? null;
+export const getCurrentUserId = () => getCurrentUser()?.userId ?? null;
+export const getCurrentEmployeeId = () => getCurrentUser()?.employeeId ?? null;
+export const getCurrentFullName = () => getCurrentUser()?.fullName ?? "";
+export const getCurrentUsername = () => getCurrentUser()?.username ?? "";
+export const getCurrentEmail = () => getCurrentUser()?.email ?? "";
+export const getCurrentDepartmentId = () => getCurrentUser()?.departmentId ?? null;
+export const getCurrentDepartmentName = () => getCurrentUser()?.departmentName ?? "";
+export const getCurrentPositionId = () => getCurrentUser()?.positionId ?? null;
+export const getCurrentPositionName = () => getCurrentUser()?.positionName ?? "";
+
+export const setSelectedOrganization = (organization) => {
+  localStorage.setItem(SELECTED_ORG_ID_KEY, organization.id);
+  localStorage.setItem(SELECTED_ORG_NAME_KEY, organization.name);
+  localStorage.setItem(SELECTED_ORG_CODE_KEY, organization.code || "");
 };
 
-export const getCurrentEmployeeId = () => {
-  return getCurrentUser()?.employeeId ?? null;
+export const getSelectedOrganizationId = () => {
+  return localStorage.getItem(SELECTED_ORG_ID_KEY);
 };
 
-export const getCurrentFullName = () => {
-  return getCurrentUser()?.fullName ?? "";
+export const getSelectedOrganizationName = () => {
+  return localStorage.getItem(SELECTED_ORG_NAME_KEY) || "";
 };
 
-export const getCurrentUsername = () => {
-  return getCurrentUser()?.username ?? "";
+export const getSelectedOrganizationCode = () => {
+  return localStorage.getItem(SELECTED_ORG_CODE_KEY) || "";
 };
 
-export const getCurrentEmail = () => {
-  return getCurrentUser()?.email ?? "";
-};
-
-export const getCurrentDepartmentId = () => {
-  return getCurrentUser()?.departmentId ?? null;
-};
-
-export const getCurrentDepartmentName = () => {
-  return getCurrentUser()?.departmentName ?? "";
-};
-
-export const getCurrentPositionId = () => {
-  return getCurrentUser()?.positionId ?? null;
-};
-
-export const getCurrentPositionName = () => {
-  return getCurrentUser()?.positionName ?? "";
+export const clearSelectedOrganization = () => {
+  localStorage.removeItem(SELECTED_ORG_ID_KEY);
+  localStorage.removeItem(SELECTED_ORG_NAME_KEY);
+  localStorage.removeItem(SELECTED_ORG_CODE_KEY);
 };
 
 export const clearAccessToken = () => {
   accessToken = null;
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(CURRENT_USER_KEY);
+  clearSelectedOrganization();
 };
 
 export const login = async (identifier, password) => {
@@ -119,3 +117,9 @@ export const signup = async (payload) => {
 export const logout = () => {
   clearAccessToken();
 };
+
+
+
+
+//
+// 14/7/--->b3bdaaa  beirut kadii

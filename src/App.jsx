@@ -12,6 +12,9 @@ import LearningPathsList from "./pages/LearningPaths/LearningPathsList";
 import AssignmentsList from "./pages/Assignments/AssignmentsList";
 import LiveSessionsList from "./pages/LiveSessions/LiveSessionsList";
 import MyTrainingsList from "./pages/MyTrainings/MyTrainingsList";
+import OrganizationSelect from "./pages/OrganizationSelect/OrganizationSelect";
+import CreateOrganization from "./pages/Organizations/CreateOrganization";
+import OrganizationManagement from "./pages/Organizations/OrganizationManagement";
 
 function App() {
   return (
@@ -54,6 +57,7 @@ function App() {
   }
 />
 
+<Route path="/organizations/:id/manage" element={<OrganizationManagement />} />
         <Route
           path="/employees"
           element={
@@ -110,8 +114,9 @@ function App() {
   }
 />
 
+  <Route path="/select-organization" element={<OrganizationSelect />} />
  <Route path="/login" element={<LoginPage />} />
-
+<Route path="/organizations/new" element={<CreateOrganization />} />
 
       </Routes>
     </BrowserRouter>
@@ -120,13 +125,3 @@ function App() {
 
 export default App;
 
-
-
-/**
-  <Route path="/" element={<Navigate to="/login" replace />} />
-
-        <Route path="/login" element={<LoginPage />} />
-
-        <Route path="/signup" element={<Signup />} />
-
- */
