@@ -1,0 +1,37 @@
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+
+  div {
+    min-height: 86px;
+    border: 1px solid #e2e8f0;
+    background: #f8fbff;
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  label {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 950;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 0;
+    color: #0f172a;
+    font-size: 16px;
+    font-weight: 850;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 650px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}

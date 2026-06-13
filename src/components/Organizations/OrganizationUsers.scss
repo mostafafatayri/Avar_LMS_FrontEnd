@@ -1,0 +1,148 @@
+.org-users-toolbar {
+  border: 1px solid #e2e8f0;
+  background: #f8fbff;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 950;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-weight: 650;
+  }
+
+  span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 950;
+    white-space: nowrap;
+  }
+}
+
+.org-users-filter {
+  height: 48px;
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  margin-bottom: 18px;
+
+  input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-weight: 750;
+    color: #0f172a;
+  }
+}
+
+.org-users-table {
+  display: grid;
+  gap: 12px;
+}
+
+.org-user-row {
+  min-height: 78px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.org-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #eef4ff;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.org-user-info {
+  h4 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 950;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+}
+
+.org-user-badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.promote-user-btn {
+  height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 11px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+}
+
+@media (max-width: 700px) {
+  .org-user-row {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .org-user-badge,
+  .promote-user-btn {
+    grid-column: 1 / -1;
+  }
+
+  .promote-user-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

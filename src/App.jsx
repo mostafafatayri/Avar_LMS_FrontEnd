@@ -16,6 +16,8 @@ import OrganizationSelect from "./pages/OrganizationSelect/OrganizationSelect";
 import CreateOrganization from "./pages/Organizations/CreateOrganization";
 import OrganizationManagement from "./pages/Organizations/OrganizationManagement";
 
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -30,6 +32,7 @@ function App() {
           }
         />
 
+<Route path="/signup" element={<Signup />} />
         <Route
   path="/departments"
   element={

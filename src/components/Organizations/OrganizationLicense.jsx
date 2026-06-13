@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { useUpdateOrganization } from "../../hooks/useUpdateOrganization";
-
+import "./OrganizationLicense.scss";
 function formatDate(value) {
   if (!value) return "Not set";
 

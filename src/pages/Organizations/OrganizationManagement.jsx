@@ -14,10 +14,11 @@ import {
   Loader2,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-
+import OrganizationAdmins from "../../components/Organizations/OrganizationAdmins";
 import { getOrganizationById } from "../../services/organizationsService";
 import OrganizationOverview from "../../components/Organizations/OrganizationOverview";
 import OrganizationLicense from "../../components/Organizations/OrganizationLicense";
+import OrganizationUsers from "../../components/Organizations/OrganizationUsers";
 import "./OrganizationManagement.scss";
 
 const tabs = [
@@ -209,44 +210,13 @@ export default function OrganizationManagement() {
               />
             )}
 
-            {activeTab === "admins" && (
-              <div className="tab-card">
-                <div className="tab-header">
-                  <div>
-                    <h2>Administrators</h2>
-                    <p>Manage users who administer this organization.</p>
-                  </div>
-                  <UserCog size={26} />
-                </div>
+          {activeTab === "admins" && (
+  <OrganizationAdmins organization={organization} organizationId={id} />
+)}
 
-                <div className="empty-tab">
-                  <UserCog size={40} />
-                  <h3>No administrator management yet</h3>
-                  <p>Next step: connect organization admins from the backend.</p>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "users" && (
-              <div className="tab-card">
-                <div className="tab-header">
-                  <div>
-                    <h2>Users</h2>
-                    <p>View user limits and organization access.</p>
-                  </div>
-                  <Users size={26} />
-                </div>
-
-                <div className="empty-tab">
-                  <Users size={40} />
-                  <h3>User usage coming next</h3>
-                  <p>
-                    We will connect this to employees/users after the API is
-                    ready.
-                  </p>
-                </div>
-              </div>
-            )}
+          {activeTab === "users" && (
+  <OrganizationUsers organization={organization} organizationId={id} />
+)}
 
             {activeTab === "settings" && (
               <div className="tab-card">

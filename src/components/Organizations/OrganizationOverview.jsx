@@ -1,5 +1,5 @@
 import { Building2, Mail, Phone } from "lucide-react";
-
+import "./OrganizationOverview.scss";
 function formatDate(value) {
   if (!value) return "Not set";
 
